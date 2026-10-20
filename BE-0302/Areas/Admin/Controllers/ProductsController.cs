@@ -43,19 +43,10 @@ namespace BE_0302.Areas.Admin.Controllers
 
         [HttpPost]  
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductID, CategoryID, ProductName, ProductDecription," + "ProductPrice, ProductImage, UploadImg")] Product product)
+        public ActionResult Create([Bind(Include = "ProductID, CategoryID, ProductName, ProductDescription," + "ProductPrice, ProductImage")] Product product)
         {
-
             if (ModelState.IsValid)
             {
-                if (product.UploadImg != null)
-                {
-                    string filename = Path.GetFileName(product.UploadImg.FileName);
-                    string savePath = "~/Images/";
-                    product.ProductImage = savePath + filename;
-                    product.UploadImg.SaveAs(Path.Combine(Server.MapPath(savePath), filename));
-                }
-
                 db.Products.Add(product);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -82,23 +73,15 @@ namespace BE_0302.Areas.Admin.Controllers
         // POST: Admin/Categories/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductID, CategoryID, ProductName, ProductDecription," + "ProductPrice, ProductImage, UploadImg")] Product product)
+        public ActionResult Edit([Bind(Include = "CategoryID, CategoryName")] Category category)
         {
             if (ModelState.IsValid)
             {
-                if (product.UploadImg != null)
-                {
-                    string filename = Path.GetFileName(product.UploadImg.FileName);
-                    string savePath = "~/Images/";
-                    product.ProductImage = savePath + filename;
-                    product.UploadImg.SaveAs(Path.Combine(Server.MapPath(savePath), filename));
-                }
-
-                db.Entry(product).State = EntityState.Modified;
+                db.Entry(category).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(product);
+            return View(category);
         }
 
 
