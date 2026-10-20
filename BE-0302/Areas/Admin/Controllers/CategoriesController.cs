@@ -3,21 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
+using System.Net;
+using BE_0302.Models;
 
 namespace BE_0302.Areas.Admin.Controllers
 {
+
     public class CategoriesController : Controller
     {
+        private MyStoreEntities db = new MyStoreEntities();
+
         // GET: Admin/Categories
         public ActionResult Index()
         {
-            return View();
+            return View(db.Categories.ToList());
         }
 
         // GET: Admin/Categories/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            return View();
+            if(id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Category category = db.Categories.Find(id);
+            if(category == null)
+            {
+                return HttpNotFound();
+            }
+            return View(category);
         }
 
         // GET: Admin/Categories/Create
@@ -28,62 +43,54 @@ namespace BE_0302.Areas.Admin.Controllers
 
         // POST: Admin/Categories/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "CategoryID, CategoryName")] Category category)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
-
+                db.Categories.Add(category);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            return View(category);
         }
 
         // GET: Admin/Categories/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            return Details(id);
         }
 
         // POST: Admin/Categories/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "CategoryID, CategoryName")] Category category)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
-
+                db.Entry(category).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            return View(category);
         }
 
         // GET: Admin/Categories/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            return Details(id);
         }
 
         // POST: Admin/Categories/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            Category category = db.Categories.Find(id);
+            db.Categories.Remove(category);
+            db.SaveChanges();
+            return RedirectToAction("Index");
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

@@ -13,10 +13,10 @@ namespace BE_0302.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MyStore : DbContext
+    public partial class MyStoreEntities : DbContext
     {
-        public MyStore()
-            : base("name=MyStore")
+        public MyStoreEntities()
+            : base("name=MyStoreEntities")
         {
         }
     
