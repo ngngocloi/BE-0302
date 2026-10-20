@@ -1,7 +1,25 @@
-﻿
+﻿@model  BE_0302.Models.Category
 @{
     ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/View/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Edit</h2>
 
+<h2 class="bg-success"> Cập nhật danh mục</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal for">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.CategoryID)
+            
+       @Html.Partial("PVCreateEdit", Model)
+</div>
+
+    }
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
