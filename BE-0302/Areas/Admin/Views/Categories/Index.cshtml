@@ -1,33 +1,19 @@
-﻿@model IEnumerable<BE_0302.Models.Category>
-@{
-    ViewBag.Title = "Index";
-    Layout = "~/Areas/Admin/View/Shared/_AdminLayout.cshtml";
-}
-
-<h2 class="bg-success">Danh sách danh mục</h2>
-
-<table class="table bg-info col-md-12">
-    <tr>
-        <th class="col-md-8 bg-success">
-            @*@Html.DisplayNameFor(model => model.CategoryName)*@
-            Tên Danh Mục
-        </th>
-        <th class="bg-success col-md-4"></th>
-    </tr>
+@model IEnumerable<BE_0302.Models.Category>
+@{ ViewBag.Title = "Danh sách danh mục"; }
+<h2 class="page-title bg-success">DANH SÁCH DANH MỤC</h2>
+<div class="table-responsive">
+<table class="table admin-table">
+    <thead><tr><th>Mã danh mục</th><th>Tên danh mục</th><th>Thao tác</th></tr></thead>
+    <tbody>
     @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CategoryName)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Sửa", "Edit", new { id = item.CategoryID }, new { @class ="btn btn-primary btn-sm"})
-                        @*@Html.ActionLink("Thông tin", "Details", new { id = item.CategoryID })*@
-                        @Html.ActionLink("Xóa bỏ", "Delete", new { id = item.CategoryID }, new { @class = "btn btn-primary btn-sm" })
-                    </td>
-                </tr>
-            }
-</table>
-<p>
-    @Html.ActionLink("Thêm Mới", "Create", null, new { @class = "btn btn-primary"})
-</p>
+    {
+        <tr><td>@item.CategoryID</td><td>@item.CategoryName</td><td class="actions">
+            @Html.ActionLink("Sửa", "Edit", new { id = item.CategoryID }, new { @class = "btn btn-primary btn-sm" })
+            @Html.ActionLink("Chi tiết", "Details", new { id = item.CategoryID }, new { @class = "btn btn-info btn-sm" })
+            @Html.ActionLink("Xóa", "Delete", new { id = item.CategoryID }, new { @class = "btn btn-danger btn-sm" })
+        </td></tr>
+    }
+    @if (!Model.Any()) { <tr><td colspan="3">Chưa có danh mục.</td></tr> }
+    </tbody>
+</table></div>
+@Html.ActionLink("Thêm mới", "Create", null, new { @class = "btn btn-primary" })

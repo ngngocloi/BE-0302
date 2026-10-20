@@ -1,24 +1,24 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 
 namespace BE_0302.Areas.Admin
 {
-    public class AdminAreaRegistration : AreaRegistration 
+    public class AdminAreaRegistration : AreaRegistration
     {
-        public override string AreaName 
+        public override string AreaName
         {
-            get 
+            get
             {
                 return "Admin";
             }
         }
 
-        public override void RegisterArea(AreaRegistrationContext context) 
+        public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapRoute(
                 name: "Admin_default",
                 url: "Admin/{controller}/{action}/{id}",
-                defaults: new { action = "Index", id = UrlParameter.Optional },
-              namespaces: new[] { "BE-0302.Areas.Admin.Controllers" }
+                defaults: new { controller = "AdminHome", action = "Index", id = UrlParameter.Optional },
+              namespaces: new[] { "BE_0302.Areas.Admin.Controllers" }
             ) ;
         }
     }

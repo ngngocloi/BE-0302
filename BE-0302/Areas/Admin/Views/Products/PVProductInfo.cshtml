@@ -1,34 +1,11 @@
-﻿
 @model BE_0302.Models.Product
-
-<head>
-    <style>
-        img {
-            height: 250px;
-            max-width: 250px;
-        }
-    </style>
-</head>
-
-<div class="container-fluid">
-    <div class="div-horizontal bg-info">
-        <div class="col-md-3">
-            <img src="@Html.DisplayFor(model => model.ProductImage)" />
-        </div>
-        <div class="col-md-9 bg-info">
-            <dl>
-                <dt> Tên sản phẩm </dt>
-                <dd> @Html.DisplayFor(model => model.ProductName) </dd>
-
-                <dt>Mô tả</dt>
-                <dd> @Html.DisplayFor(model => model.ProductDescription) </dd>
-
-                <dt> Đơn giá </dt>
-                <dd> @Html.DisplayFor(model => model.ProductPrice) </dd>
-
-                <dt>Danh mục</dt>
-                <dd> @Html.DisplayFor(model => model.Category.CategoryName)</dd>
-            </dl>
-        </div>
-    </div>
+<div class="row bg-info product-info">
+    <div class="col-sm-4"><img class="product-preview" src="@Url.Content(Model.ImageUrl)" alt="@Model.ProductName" onerror="this.onerror=null;this.src='@Url.Content("~/Content/images/default-product.svg")';" /></div>
+    <div class="col-sm-8"><dl class="dl-horizontal">
+        <dt>Mã sản phẩm</dt><dd>@Model.ProductID</dd>
+        <dt>Tên sản phẩm</dt><dd>@Model.ProductName</dd>
+        <dt>Mô tả</dt><dd>@Model.ProductDecription</dd>
+        <dt>Đơn giá</dt><dd>@Model.ProductPrice.ToString("N0") đ</dd>
+        <dt>Danh mục</dt><dd>@(Model.Category == null ? "" : Model.Category.CategoryName)</dd>
+    </dl></div>
 </div>

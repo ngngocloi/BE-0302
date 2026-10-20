@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -17,7 +17,7 @@ namespace BE_0302
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-               namespaces: new[] {"BE-0302.Controllers"}
+               namespaces: new[] {"BE_0302.Controllers"}
             );
         }
     }

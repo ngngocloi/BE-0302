@@ -1,30 +1,14 @@
-﻿@model  BE_0302.Models.Category
-@{
-    ViewBag.Title = "Delete";
-    Layout = "~/Areas/Admin/View/Shared/_AdminLayout.cshtml";
-}
+@model BE_0302.Models.Category
+@{ ViewBag.Title = "Xóa danh mục"; }
+<h2 class="page-title bg-success">Xóa danh mục</h2>
+@Html.ValidationSummary(false, "", new { @class = "text-danger" })
+<dl class="dl-horizontal"><dt>Mã danh mục</dt><dd>@Model.CategoryID</dd><dt>Tên danh mục</dt><dd>@Model.CategoryName</dd></dl>
 
-
-<h2 class="bg-success">Xóa danh mục </h2>
-
-<h4 class="alert-danger">Bạn có chắc muốn xóa sản phẩm này?</h4>
+<p class="alert alert-warning">Bạn có chắc muốn xóa danh mục này?</p>
 @using (Html.BeginForm())
 {
-   
     @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <div class="form-group">
-                <div class="control-label col-md-2"> Tên danh mục</div>
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.CategoryName)
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Xóa" class="btn btn-primary"/>
-                    @Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-primary"})
-                </div>
-            </div>
-        </div>
-    </div>
+    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
 }
+
+<div class="form-actions">@Html.ActionLink("Quay lại danh sách", "Index", null, new { @class = "btn btn-default" })</div>

@@ -1,96 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Data.Entity;
 using System.Net;
+using System.Web.Mvc;
 using BE_0302.Models;
 
 namespace BE_0302.Areas.Admin.Controllers
 {
-
-    public class CategoriesController : Controller
+    public class CategoriesController : AdminController
     {
-        private MyStoreEntities db = new MyStoreEntities();
-
-        // GET: Admin/Categories
-        public ActionResult Index()
+        public ActionResult Index() { return View(db.Categories.OrderBy(c => c.CategoryName).ToList()); }
+        public ActionResult Details(int? id) { return CategoryView(id); }
+        public ActionResult Edit(int? id) { return CategoryView(id); }
+        public ActionResult Delete(int? id) { return CategoryView(id); }
+        private ActionResult CategoryView(int? id)
         {
-            return View(db.Categories.ToList());
-        }
-
-        // GET: Admin/Categories/Details/5
-        public ActionResult Details(int? id)
-        {
-            if(id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Category category = db.Categories.Find(id);
-            if(category == null)
-            {
-                return HttpNotFound();
-            }
+            if (!id.HasValue) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var category = db.Categories.Find(id.Value);
+            if (category == null) return HttpNotFound();
             return View(category);
         }
-
-        // GET: Admin/Categories/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Admin/Categories/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryID, CategoryName")] Category category)
+        public ActionResult Create() { return View(new Category()); }
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "CategoryName")] Category category)
         {
             if (ModelState.IsValid)
             {
+                category.CategoryName = category.CategoryName.Trim();
                 db.Categories.Add(category);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (SaveChanges()) return RedirectToAction("Index");
             }
             return View(category);
         }
-
-        // GET: Admin/Categories/Edit/5
-        public ActionResult Edit(int? id)
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "CategoryID,CategoryName")] Category category)
         {
-            return Details(id);
-        }
-
-        // POST: Admin/Categories/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoryID, CategoryName")] Category category)
-        {
+            var existing = db.Categories.Find(category.CategoryID);
+            if (existing == null) return HttpNotFound();
             if (ModelState.IsValid)
             {
-                db.Entry(category).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                existing.CategoryName = category.CategoryName.Trim();
+                if (SaveChanges()) return RedirectToAction("Index");
             }
             return View(category);
         }
-
-        // GET: Admin/Categories/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            return Details(id);
-        }
-
-        // POST: Admin/Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Category category = db.Categories.Find(id);
-            db.Categories.Remove(category);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-
+            var category = db.Categories.Find(id);
+            if (category == null) return HttpNotFound();
+            if (db.Products.Any(p => p.CategoryID == id))
+                ModelState.AddModelError("", "Danh mục còn sản phẩm. Hãy chuyển hoặc xóa các sản phẩm trước.");
+            else
+            {
+                db.Categories.Remove(category);
+                if (SaveChanges()) return RedirectToAction("Index");
+            }
+            return View(category);
         }
     }
 }
